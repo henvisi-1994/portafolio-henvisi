@@ -1,0 +1,18 @@
+.login-container{
+  margin-left: 4%;
+  margin-right: 4%;
+}
+.login-container mat-form-field + mat-form-field {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+.form-control {
+  width: 100%;
+}
+

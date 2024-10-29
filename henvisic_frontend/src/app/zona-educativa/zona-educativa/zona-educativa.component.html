@@ -1,0 +1,50 @@
+<div class="container">
+  <mat-tab-group  #tabGroup>
+    <mat-tab label="Formulario">
+      <div class="container">
+        <form [formGroup]="Form" >
+          <div class="form-fields">
+            <mat-form-field>
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                placeholder="Obligatorio"
+                [formControl]="nombre"
+                required
+              />
+              @if (nombre.invalid) {
+              <mat-error>{{ errorMessage("nombre") }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div>
+            <app-button-submit
+              [disabled]="disabled"
+              [accion] = "accion"
+              (deshabilitar)="deshabilitar($event)"
+              [Form]="Form"
+              [tableData]="tableData"
+              endpoint="zonas-educativas"
+              (actualizarData)="actualizarData($event)"
+            ></app-button-submit>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Listado">
+      <div class="container">
+        <app-material-table
+          *ngIf="!cargando"
+          (disabled)="deshabilitar($event)"
+          (accion)="cambiarAccion($event)"
+          endpoint="zonas-educativas"
+          [columns]="tableColumns"
+          [data]="tableData"
+          [Form]="Form"
+          [tabGroup] ="tabGroup"
+        >
+        </app-material-table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

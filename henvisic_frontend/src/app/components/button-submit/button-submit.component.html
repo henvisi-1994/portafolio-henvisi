@@ -1,0 +1,16 @@
+<div>
+  <div class="spinner-overlay" *ngIf="cargando">
+    <mat-spinner></mat-spinner>
+  </div>
+  <button mat-flat-button color="primary" type="button" (click)="onSubmit()" [disabled]="disabled" >
+    Guardar
+  </button>
+  <button
+    mat-flat-button
+    color="accent"
+    type="button"
+    (click)="cancelar()"
+  >
+    Cancelar
+  </button>
+</div>

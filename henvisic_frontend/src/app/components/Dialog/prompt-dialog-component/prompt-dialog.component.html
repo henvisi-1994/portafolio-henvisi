@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ data.titulo }}</h1>
+<div mat-dialog-content>
+  <p [innerHTML]="data.message"></p>
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="pat@example.com"
+      [formControl]="model"
+      (blur)="updateErrorMessage()"
+      required
+    />
+    @if (model.invalid) {
+      <mat-error>{{errorMessage()}}</mat-error>
+    }
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-button (click)="onConfirm()">Aceptar</button>
+</div>
