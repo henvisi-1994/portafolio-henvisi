@@ -20,6 +20,7 @@ export class DataManager<T> {
       })
     );
   }
+
   guardar(endpoint: string, model: T): Observable<T> {
     this.dataRepository.endpoint = endpoint;
     return this.dataRepository.guardar(model).pipe(

@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Front-End Routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact');
 
 //Admin Panel
