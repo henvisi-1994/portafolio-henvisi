@@ -5,6 +5,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { DataManager } from '../../shared/aplications/DataManager';
 import { Home } from './domain/home';
+import { catchError, map, of } from 'rxjs';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class PrincipalComponent implements OnInit {
   isMenuOpen = false;
   isMobileView = false;
   home:Home [] []= [[]];
-  homeModel: Home[] = []; // Se declara la variable para almacenar la lista de objetos Home
+  homeModel: Home= new Home(); // Se declara la variable para almacenar la lista de objetos Home
   constructor(@Inject(PLATFORM_ID) private platformId: NonNullable<unknown>,    private homeManager: DataManager<Home>,
 ) {}
 
@@ -29,11 +30,21 @@ export class PrincipalComponent implements OnInit {
     this.listarData();
   }
   listarData() {
-    this.homeManager.loadData('home').subscribe((data) => {
-      this.home= data;
-      const flattenedHome: Home[] = this.home.flat() as Home[]; // El casting garantiza que TypeScript trate el resultado como `Home[]`
-      this.homeModel = flattenedHome
+    this.homeManager.loadData('home')
+    .pipe(
+      map(data => data.flat()[0] as Home),
+      catchError(error => {
+        // Handle errors here, e.g., log error, display user message, etc.
+        console.error('Error fetching data:', error);
+        return of(null as unknown as Home); // Or return a default value
+      })
+    )
+    .subscribe(homeModel => {
+      if (homeModel) {
+        console.log(homeModel);
 
+        this.homeModel = homeModel;
+      }
     });
   }
   toggleMenu() {

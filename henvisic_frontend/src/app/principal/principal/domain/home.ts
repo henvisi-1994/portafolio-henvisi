@@ -1,15 +1,22 @@
 import { EntidadAuditable } from "../../../shared/domain/EntidadAuditable";
+import { Education } from "./Education";
+import { Experience } from "./Experience";
+import { Setting } from "./Setting";
+import { Skill } from "./Skill";
 import { UserHome } from "./UserHome";
+import { Service } from "./Service";
+import { Category } from "./Category";
+import { Portafolio } from "./Portafolio";
 
 export class Home extends EntidadAuditable {
  user: UserHome | null;
-  experiences: unknown[]; // Deberías crear una clase específica para "experiencia" si necesitas tipado fuerte
-  educations: unknown[];  // Igualmente, una clase para "educación"
-  skills: unknown[];
-  services: unknown[];
-  categories: unknown[];
-  portfolios: unknown[];
-  setting: unknown;        // Podrías crear una clase `Setting` con los campos esperados
+  experiences: Experience[]; // Deberías crear una clase específica para "experiencia" si necesitas tipado fuerte
+  educations: Education[];  // Igualmente, una clase para "educación"
+  skills: Skill[];
+  services: Service[];
+  categories: Category[];
+  portfolios: Portafolio[];
+  setting: Setting | null;        // Podrías crear una clase `Setting` con los campos esperados
   reviewers: unknown[];
 
   constructor() {

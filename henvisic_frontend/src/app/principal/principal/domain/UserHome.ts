@@ -8,7 +8,7 @@ address: string | null;
 job: string | null;
 degree: string | null;
 profilePic: string | null;
-birthDay: Date | null;
+birth_day: Date | string | null;
 experience: number | null;
 
 constructor() {
@@ -20,7 +20,7 @@ constructor() {
   this.job = null;
   this.degree = null;
   this.profilePic = null;
-  this.birthDay = null;
+  this.birth_day = null;
   this.experience = null;
 }
 }
