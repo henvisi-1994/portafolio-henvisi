@@ -7,6 +7,7 @@ import { UserHome } from "./UserHome";
 import { Service } from "./Service";
 import { Category } from "./Category";
 import { Portafolio } from "./Portafolio";
+import { Review } from "./Review";
 
 export class Home extends EntidadAuditable {
  user: UserHome | null;
@@ -17,7 +18,7 @@ export class Home extends EntidadAuditable {
   categories: Category[];
   portfolios: Portafolio[];
   setting: Setting | null;        // Podrías crear una clase `Setting` con los campos esperados
-  reviewers: unknown[];
+  reviewers: Review[];
 
   constructor() {
     super();
