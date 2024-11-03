@@ -27,8 +27,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Front-End Routes
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact');
 
 //Admin Panel
 Route::middleware(['auth','isAdmin'])->name('admin.')->prefix('/admin')->group(function(){

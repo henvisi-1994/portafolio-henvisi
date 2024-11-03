@@ -15,60 +15,75 @@
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="contact-form text-center">
-          <form id="contactForm" method="POST" action="">
+          <form id="contactForm" [formGroup]="Form">
             <div class="form-row">
-              <div class="control-group col-sm-6">
+              <mat-form-field
+                class="control-group col-sm-6"
+              >
                 <input
-                  type="text"
-                  class="form-control p-4"
-                  id="name"
+                  matInput
                   placeholder="Your Name"
+                  formControlName="name"
                   required
-                  name="name"
-                  value=""
                 />
-              </div>
-              <div class="control-group col-sm-6">
+                <mat-error *ngIf="name.invalid">{{
+                  errorMessage("name")
+                }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="control-group col-sm-6">
                 <input
-                  type="email"
-                  class="form-control p-4"
-                  id="email"
+                  matInput
                   placeholder="Your Email"
-                  value=""
+                  formControlName="email"
                   required
-                  name="email"
                 />
-              </div>
+                <mat-error *ngIf="email.invalid">{{
+                  errorMessage("email")
+                }}</mat-error>
+              </mat-form-field>
             </div>
+
             <br />
             <div class="control-group">
-              <input
-                type="text"
-                class="form-control p-4"
-                id="subject"
-                placeholder="Subject"
-                value=""
-                required
-                name="subject_mail"
-              />
+              <mat-form-field class="col-sm-12">
+                <input
+                  matInput
+                  id="subject"
+                  placeholder="Subject"
+                  required
+                  formControlName="subject_mail"
+                />
+                <mat-error *ngIf="subject_mail.invalid">{{
+                  errorMessage("subject_mail")
+                }}</mat-error>
+              </mat-form-field>
             </div>
+
             <br />
             <div class="control-group">
-              <textarea
-                class="form-control py-3 px-4"
-                rows="5"
-                id="message"
-                placeholder="Message"
-                name="content"
-                required
-              ></textarea>
+              <mat-form-field class="col-sm-12">
+                <textarea
+                  matInput
+                  rows="5"
+                  placeholder="Message"
+                  formControlName="content"
+                  required
+                ></textarea>
+                <mat-error *ngIf="content.invalid">{{
+                  errorMessage("content")
+                }}</mat-error>
+              </mat-form-field>
             </div>
+
             <div>
               <br />
               <button
                 class="btn btn-outline-primary"
-                type="submit"
                 id="sendMessageButton"
+                [disabled]="disabled"
+                type="button"
+                (click)="guardar()"
               >
                 Send Message
               </button>
