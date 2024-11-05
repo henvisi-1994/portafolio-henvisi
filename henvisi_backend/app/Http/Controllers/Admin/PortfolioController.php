@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Portfolio;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PortfolioController extends Controller
 {
@@ -17,8 +20,8 @@ class PortfolioController extends Controller
      */
     public function index()
     {
-        $portfolios= Portfolio::with('category')->get();
-        return view('admin.portfolio.index',compact('portfolios'));
+        $portfolios = Portfolio::with('category')->get();
+        return view('admin.portfolio.index', compact('portfolios'));
     }
 
     /**
@@ -29,7 +32,7 @@ class PortfolioController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.portfolio.create',compact('categories'));
+        return view('admin.portfolio.create', compact('categories'));
     }
 
     /**
@@ -40,26 +43,37 @@ class PortfolioController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|min:4',
-            'project_url' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'cat_id' => 'required|exists:categories,id'
-        ]);
+        try {
+            DB::beginTransaction();
+            $validated = $request->validate([
+                'title' => 'required|min:4',
+                'project_url' => 'required',
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+                'cat_id' => 'required|exists:categories,id'
+            ]);
 
-        $portfolio = new Portfolio();
-        $portfolio->title = $validated['title'];
-        $portfolio->project_url = $validated['project_url'];
-        $portfolio->cat_id = $request->cat_id;
+            $portfolio = new Portfolio();
+            $portfolio->title = $validated['title'];
+            $portfolio->project_url = $validated['project_url'];
+            $portfolio->cat_id = $request->cat_id;
 
-        if ($request->hasFile('image')) {
-            // Almacena la imagen en el disco 'public' en la carpeta 'images/portafolios'
-            $get_file = $request->file('image')->store('images/portafolios', 'public');
-            $portfolio->image =  $get_file; // Agrega el prefijo 'storage/' para el acceso público
+            if ($request->hasFile('image')) {
+                // Almacena la imagen en el disco 'public' en la carpeta 'images/portafolios'
+                $get_file = $request->file('image')->store('images/portafolios', 'public');
+                $portfolio->image =  $get_file; // Agrega el prefijo 'storage/' para el acceso público
+            }
+
+            $portfolio->save();
+            $modelo = $portfolio;
+            $mensaje = 'Guardado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
         }
-
-        $portfolio->save();
-        return to_route('admin.portfolio.index')->with('message','Portfolio Added');
     }
 
 
@@ -72,7 +86,7 @@ class PortfolioController extends Controller
     public function edit(Portfolio $portfolio)
     {
         $categories = Category::all();
-        return view('admin.portfolio.edit', compact('portfolio','categories'));
+        return view('admin.portfolio.edit', compact('portfolio', 'categories'));
     }
 
     /**
@@ -101,7 +115,7 @@ class PortfolioController extends Controller
         }
 
         $portfolio->update();
-        return to_route('admin.portfolio.index')->with('message','Portfolio Updated');
+        return to_route('admin.portfolio.index')->with('message', 'Portfolio Updated');
     }
 
     /**
@@ -112,10 +126,10 @@ class PortfolioController extends Controller
      */
     public function destroy(Portfolio $portfolio)
     {
-        if($portfolio->image != null){
+        if ($portfolio->image != null) {
             Storage::delete($portfolio->image);
         }
-        $portfolio -> delete();
+        $portfolio->delete();
         return back()->with('message', 'Portfolio Deleted');
     }
 
@@ -124,13 +138,12 @@ class PortfolioController extends Controller
         $searchedItem = $request->input('search');
 
         $portfolios = Portfolio::query()
-        ->where('title', 'LIKE', "%{$searchedItem}%")
-        ->orWhere('project_url', 'LIKE', "%{$searchedItem}%")
-        ->get();
+            ->where('title', 'LIKE', "%{$searchedItem}%")
+            ->orWhere('project_url', 'LIKE', "%{$searchedItem}%")
+            ->get();
 
 
-    // Return the search view with the resluts compacted
-    return view('admin.portfolio.search', compact('portfolios'));
-
+        // Return the search view with the resluts compacted
+        return view('admin.portfolio.search', compact('portfolios'));
     }
 }

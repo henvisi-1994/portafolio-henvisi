@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -15,8 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('admin.category.index', compact('categories'));
+        $result = Category::all();
+        return response()->json(compact('result'));
     }
 
     /**
@@ -37,10 +40,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate(['name'=> ['required','min:3']]);
-        Category::create($validated);
-
-        return to_route('admin.category.index')->with('message','New Category Added');
+        try {
+            DB::beginTransaction();
+            $validated = $request->validate(['name' => ['required', 'min:3']]);
+            $category = Category::create($validated);
+            $modelo = $category;
+            $mensaje = 'Guardado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**
@@ -61,11 +74,25 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category){
-        $validated = $request->validate(['name'=> ['required','min:3']]);
-        $category->update($validated);
+    public function update(Request $request, Category $category)
+    {
+        try {
+            DB::beginTransaction();
 
-        return to_route('admin.category.index')->with('message','Category Updated');
+            $validated = $request->validate(['name' => ['required', 'min:3']]);
+            $category->update($validated);
+            DB::commit();
+
+            $modelo = $category;
+            $mensaje = 'Modificado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**

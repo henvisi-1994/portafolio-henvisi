@@ -1,5 +1,5 @@
+import { Category } from "../../../admin/category/domain/Category";
 import { EntidadAuditable } from "../../../shared/domain/EntidadAuditable";
-import { Category } from "./Category";
 
 export class Portafolio extends EntidadAuditable {
   title: string | null;

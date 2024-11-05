@@ -6,7 +6,7 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './admin-layout.component.html',
-  styleUrls: ['./admin-layout.component.css']
+  styleUrls: ['/assets/admin/css/style.css','./admin-layout.component.css']
 })
 export class AdminLayoutComponent implements OnInit {
 

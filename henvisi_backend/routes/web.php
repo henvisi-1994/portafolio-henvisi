@@ -29,19 +29,8 @@ use Illuminate\Support\Facades\Route;
 
 
 //Admin Panel
-Route::middleware(['auth','isAdmin'])->name('admin.')->prefix('/admin')->group(function(){
-    Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/qualification/education', [QualificationController::class,'showEducation'])->name('qualification.edu');
-    Route::get('/qualification/experience', [QualificationController::class,'showExperience'])->name('qualification.exp');
-    Route::resource('/qualification', QualificationController::class);
-    Route::resource('/skill', SkillController::class);
-    Route::resource('/service', ServiceController::class);
-    Route::resource('/review', ReviewController::class);
-    Route::resource('/category', CategoryController::class);
-    Route::get('/portfolio/search', [PortfolioController::class,'search'])->name('portfolio.search');
-    Route::resource('/portfolio', PortfolioController::class);
-    Route::resource('/aboutme', AboutmeController::class);
-    Route::resource('/setting', SettingController::class);
-});
+/*Route::middleware(['auth','isAdmin'])->name('admin.')->prefix('/admin')->group(function(){
+
+});*/
 
 Auth::routes();

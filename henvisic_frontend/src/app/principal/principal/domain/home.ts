@@ -5,9 +5,9 @@ import { Setting } from "./Setting";
 import { Skill } from "./Skill";
 import { UserHome } from "./UserHome";
 import { Service } from "./Service";
-import { Category } from "./Category";
 import { Portafolio } from "./Portafolio";
 import { Review } from "./Review";
+import { Category } from "../../../admin/category/domain/Category";
 
 export class Home extends EntidadAuditable {
  user: UserHome | null;

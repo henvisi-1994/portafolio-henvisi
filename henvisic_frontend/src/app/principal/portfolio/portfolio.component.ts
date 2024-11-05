@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Portafolio } from '../principal/domain/Portafolio';
-import { Category } from '../principal/domain/Category';
 import { environment } from '../../../environments/environment';
+import { Category } from '../../admin/category/domain/Category';
 
 @Component({
   selector: 'app-portfolio',
