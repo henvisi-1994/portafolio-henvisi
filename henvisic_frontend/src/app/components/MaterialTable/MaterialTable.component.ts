@@ -100,4 +100,7 @@ export class MaterialTableComponent<T extends EntidadAuditable>
       }
     });
   }
+  listar(){
+    
+  }
 }

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterLink,RouterOutlet],
   templateUrl: './admin-layout.component.html',
   styleUrls: ['/assets/admin/css/style.css','./admin-layout.component.css']
 })

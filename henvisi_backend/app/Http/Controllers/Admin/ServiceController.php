@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ServiceController extends Controller
 {
@@ -15,8 +18,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::all();
-        return view('admin.service.index', compact('services'));
+        $result = Service::all();
+        return response()->json(compact('result'));
     }
 
     /**
@@ -37,13 +40,24 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'icon' => 'required',
-            'name' => 'required|min:7',
-            'description' => 'required|min:80|max:255',
-        ]);
-        Service::create($validated);
-        return to_route('admin.service.index')->with('message','New Service Added');
+        try {
+            DB::beginTransaction();
+            $validated = $request->validate([
+                'icon' => 'required',
+                'name' => 'required|min:7',
+                'description' => 'required|min:80|max:255',
+            ]);
+            $service = Service::create($validated);
+            $modelo = $service;
+            $mensaje = 'Guardado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**
@@ -59,7 +73,7 @@ class ServiceController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-    *
+     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -77,15 +91,24 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service)
     {
-
-        $validated = $request->validate([
-            'icon' => 'required',
-            'name' => 'required|min:7',
-            'description' => 'required|min:80|max:255',
-        ]);
-        $service->update($validated);
-        return to_route('admin.service.index')->with('message', 'Service Updated');
-        
+        try {
+            DB::beginTransaction();
+            $validated = $request->validate([
+                'icon' => 'required',
+                'name' => 'required|min:7',
+                'description' => 'required|min:80|max:255',
+            ]);
+            $service->update($validated);
+            $modelo = $service;
+            $mensaje = 'Actualizado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**
@@ -97,6 +120,7 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $service->delete();
-        return back()->with('message','Service Deleted');
+        $mensaje = 'Service Deleted';
+        return response()->json(compact('mensaje'));
     }
 }

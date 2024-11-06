@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Service } from '../principal/domain/Service';
+import { Service } from '../../admin/service/domain/Service';
 import { CommonModule } from '@angular/common';
 
 @Component({

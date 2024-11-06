@@ -104,6 +104,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return to_route('admin.category.index')->with('message', 'Category Deleted');
+        $mensaje = 'Category Deleted';
+        return response()->json(compact('mensaje'));
     }
 }

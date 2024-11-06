@@ -4,7 +4,7 @@ import { Experience } from "./Experience";
 import { Setting } from "./Setting";
 import { Skill } from "./Skill";
 import { UserHome } from "./UserHome";
-import { Service } from "./Service";
+import { Service } from "../../../admin/service/domain/Service";
 import { Portafolio } from "./Portafolio";
 import { Review } from "./Review";
 import { Category } from "../../../admin/category/domain/Category";
