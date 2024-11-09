@@ -1,0 +1,79 @@
+<div class="container">
+  <mat-tab-group #tabGroup>
+    <mat-tab label="Formulario">
+      <div class="container">
+        <form [formGroup]="Form">
+          <div class="form-fields">
+            <mat-form-field>
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                placeholder="Obligatorio"
+                [formControl]="name"
+                required
+              />
+              @if (name.invalid) {
+              <mat-error>{{ errorMessage("name") }}</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="custom-field-wrapper">
+              <mat-label class="custom-label">Porcentaje {{percent.value + '%' }}</mat-label>
+              <mat-slider>
+                <input
+                class="custom-input"
+                  matSliderThumb
+                  min="1"
+                  max="100"
+                  step="1"
+                  placeholder="Obligatorio"
+                  [formControl]="percent"
+                />
+              </mat-slider>
+
+            </div>
+            <mat-form-field>
+              <mat-label>Color</mat-label>
+              <input
+                matInput
+                type="color"
+                placeholder="Obligatorio"
+                [formControl]="color"
+                required
+              />
+              @if (color.invalid) {
+              <mat-error>{{ errorMessage("color") }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div>
+            <app-button-submit
+              [disabled]="disabled"
+              [accion]="accion"
+              (deshabilitar)="deshabilitar($event)"
+              [Form]="Form"
+              [tableData]="tableData"
+              endpoint="skill"
+              (actualizarData)="actualizarData($event)"
+            ></app-button-submit>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Listado">
+      <div class="container">
+        <app-material-table
+          *ngIf="!cargando"
+          (disabled)="deshabilitar($event)"
+          (accion)="cambiarAccion($event)"
+          endpoint="skill"
+          [columns]="tableColumns"
+          [data]="tableData"
+          [Form]="Form"
+          [tabGroup]="tabGroup"
+        >
+        </app-material-table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

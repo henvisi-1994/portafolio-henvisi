@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class SkillController extends Controller
 {
@@ -15,8 +18,8 @@ class SkillController extends Controller
      */
     public function index()
     {
-        $skills = Skill::all();
-        return view('admin.skill.index', compact('skills'));
+        $result = Skill::all();
+        return response()->json(compact('result'));
     }
 
     /**
@@ -27,7 +30,6 @@ class SkillController extends Controller
     public function create()
     {
         return view('admin.skill.create');
-
     }
 
     /**
@@ -38,13 +40,24 @@ class SkillController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|min:3',
-            'color' => 'required|min:7',
-            'percent' => 'required|numeric|gt:0|lte:100',
-        ]);
-        Skill::create($validated);
-        return to_route('admin.skill.index')->with('message','New skill Added');
+        try {
+            DB::beginTransaction();
+            $validated = $request->validate([
+                'name' => 'required|min:3',
+                'color' => 'required|min:7',
+                'percent' => 'required|numeric|gt:0|lte:100',
+            ]);
+            $skill=Skill::create($validated);
+            $modelo = $skill;
+            $mensaje = 'Guardado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**
@@ -78,14 +91,24 @@ class SkillController extends Controller
      */
     public function update(Request $request, Skill $skill)
     {
-        $validated = $request->validate([
-            'name' => 'required|min:3',
-            'color' => 'required|min:7',
-            'percent' => 'required|numeric|gt:0|lte:100',
-        ]);
-        $skill-> update($validated);
-        return to_route('admin.skill.index')->with('message', 'Skill Updated');
-
+        try {
+            DB::beginTransaction();
+            $validated = $request->validate([
+                'name' => 'required|min:3',
+                'color' => 'required|min:7',
+                'percent' => 'required|numeric|gt:0|lte:100',
+            ]);
+            $skill->update($validated);
+            $modelo = $skill;
+            $mensaje = 'Modificado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**
@@ -96,7 +119,7 @@ class SkillController extends Controller
      */
     public function destroy(Skill $skill)
     {
-        $skill -> delete();
-        return back()->with('message', 'Skill Deleted');
-    }
+        $skill->delete();
+        $mensaje = 'Skill Deleted';
+        return response()->json(compact('mensaje'));    }
 }

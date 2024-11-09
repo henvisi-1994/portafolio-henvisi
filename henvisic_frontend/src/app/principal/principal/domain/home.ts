@@ -2,12 +2,12 @@ import { EntidadAuditable } from "../../../shared/domain/EntidadAuditable";
 import { Education } from "./Education";
 import { Experience } from "./Experience";
 import { Setting } from "./Setting";
-import { Skill } from "./Skill";
 import { UserHome } from "./UserHome";
 import { Service } from "../../../admin/service/domain/Service";
 import { Portafolio } from "./Portafolio";
 import { Review } from "./Review";
 import { Category } from "../../../admin/category/domain/Category";
+import { Skill } from "../../../admin/skill/domain/Skill";
 
 export class Home extends EntidadAuditable {
  user: UserHome | null;
