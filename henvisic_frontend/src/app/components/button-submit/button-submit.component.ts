@@ -39,6 +39,7 @@ export class ButtonSubmitComponent<T extends EntidadAuditable> {
         }
       }
     } else {
+      console.log(this.Form)
       console.log('Formulario no válido');
     }
   }

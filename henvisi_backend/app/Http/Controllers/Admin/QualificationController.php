@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Qualification;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class QualificationController extends Controller
 {
@@ -27,8 +30,8 @@ class QualificationController extends Controller
 
     public function index()
 {
-        $qualifications = Qualification::all();
-        return view('admin.qualification.index', compact('qualifications'));
+    $result  = Qualification::all();
+        return  compact('result');
     }
     /**
      * Show the form for creating a new resource.
@@ -46,10 +49,12 @@ class QualificationController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     *     
+     *
      */
     public function store(Request $request)
     {
+        try {
+            DB::beginTransaction();
         $validated = $request->validate([
             'title' => 'required|min:3',
             'association' => 'required|min:3',
@@ -58,10 +63,17 @@ class QualificationController extends Controller
             'from'=> 'required|min:4',
             'to'=> 'required|min:4'
         ]);
-                // dd($validated);
-
-        Qualification::create($validated);
-        return to_route('admin.qualification.edu')->with('message','New Qualification Added');
+        $qualification =Qualification::create($validated);
+        $modelo = $qualification;
+            $mensaje = 'Guardado exitosamente';
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
     }
 
     /**
@@ -95,6 +107,8 @@ class QualificationController extends Controller
      */
     public function update(Request $request, Qualification $qualification)
     {
+        try {
+            DB::beginTransaction();
         $validated = $request->validate([
             'title' => 'required|min:3',
             'association' => 'required|min:3',
@@ -107,10 +121,19 @@ class QualificationController extends Controller
 
         $qualification->update($validated);
         if($request['type']== 'Education'){
-            return to_route('admin.qualification.edu')->with('message','Education Updated');
+            $mensaje = 'Education Updated';
         }else{
-            return to_route('admin.qualification.exp')->with('message','Experience Updated');
+            $mensaje = 'Experience Updated';
         }
+        $modelo = $qualification;
+        DB::commit();
+        return response()->json(compact('mensaje', 'modelo'));
+    } catch (Exception $e) {
+        DB::rollBack();
+        throw ValidationException::withMessages([
+            'Error al insertar' => [$e->getMessage()],
+        ]);
+    }
     }
 
     /**
@@ -122,6 +145,7 @@ class QualificationController extends Controller
     public function destroy(Qualification $qualification)
     {
         $qualification -> delete();
-        return back()->with('message', 'Qualification Deleted');
+        $mensaje = 'Qualification Deleted';
+        return response()->json(compact('mensaje'));
     }
 }

@@ -1,0 +1,104 @@
+<div class="container">
+  <mat-tab-group #tabGroup>
+    <mat-tab label="Formulario">
+      <div class="container">
+        <form [formGroup]="Form">
+          <div class="form-fields">
+            <mat-form-field>
+              <mat-label>Titulo</mat-label>
+              <input
+                matInput
+                placeholder="Obligatorio"
+                [formControl]="title"
+                required
+              />
+              @if (title.invalid) {
+              <mat-error>{{ errorMessage("title") }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Empresa</mat-label>
+              <input
+                matInput
+                placeholder="Obligatorio"
+                [formControl]="association"
+                required
+              />
+              @if (association.invalid) {
+              <mat-error>{{ errorMessage("association") }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Descripcion</mat-label>
+              <input
+                matInput
+                placeholder="Obligatorio"
+                [formControl]="description"
+                required
+              />
+              @if (description.invalid) {
+              <mat-error>{{ errorMessage("description") }}</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Enter a date range</mat-label>
+              <mat-date-range-input [formGroup]="Form"   [rangePicker]="picker">
+                <input matStartDate formControlName="from" placeholder="Start date">
+                <input matEndDate formControlName="to" placeholder="End date">
+              </mat-date-range-input>
+              <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+
+              @if (from.invalid) {
+                <mat-error>{{ errorMessage("from") }}</mat-error>
+                }
+                @if (to.invalid) {
+                  <mat-error>{{ errorMessage("to") }}</mat-error>
+                  }
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="type">
+                @for (type of type_qualification; track type) {
+                <mat-option [value]="type.value">{{
+                  type.viewValue
+                }}</mat-option>
+                }
+              </mat-select>
+              @if (to.invalid) {
+              <mat-error>{{ errorMessage("to") }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div>
+            <app-button-submit
+              [disabled]="disabled"
+              [accion]="accion"
+              (deshabilitar)="deshabilitar($event)"
+              [Form]="Form"
+              [tableData]="tableData"
+              endpoint="qualification"
+              (actualizarData)="actualizarData($event)"
+            ></app-button-submit>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Listado">
+      <div class="container">
+        <app-material-table
+          *ngIf="!cargando"
+          (disabled)="deshabilitar($event)"
+          (accion)="cambiarAccion($event)"
+          endpoint="qualification"
+          [columns]="tableColumns"
+          [data]="tableData"
+          [Form]="Form"
+          [tabGroup]="tabGroup"
+        >
+        </app-material-table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
