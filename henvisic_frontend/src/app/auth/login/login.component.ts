@@ -4,6 +4,7 @@ import {
   Component,
   effect,
   inject,
+  Injectable,
   WritableSignal,
 } from '@angular/core';
 import {
@@ -23,6 +24,7 @@ import { UserLogin } from './domain/UserLogin.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthStore } from './data-access/authStore';
 import { User } from './domain/User.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -40,6 +42,9 @@ import { User } from './domain/User.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LoginService],
 })
+@Injectable({
+  providedIn: 'root',
+})
 export class LoginComponent {
   loginForm: FormGroup;
   currentToken: string | null = null;
@@ -51,7 +56,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     public loginService: LoginService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router:Router
   ) {
     this.error = this.loginService.error;
     this.user = this.loginService.user;
@@ -70,6 +76,7 @@ export class LoginComponent {
       } else {
         if (user) {
           this.authStore.setUser(user);
+          this.router.navigate(['/admin/portfolio']);
         }
         this.updateErrorMessage();
       }

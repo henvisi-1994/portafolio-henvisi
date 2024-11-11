@@ -1,35 +1,86 @@
 
-<p>Hola, {{ authStore.userData()?.name }}</p>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()"  class="login-container">
-  <mat-form-field appearance="fill" class="form-control">
-    <mat-label>Email</mat-label>
-    <input
-      matInput
-      placeholder="pat@example.com"
-      [formControl]="email"
-      (blur)="updateErrorMessage()"
-      required
-    />
-    @if (email.invalid) {
-    <mat-error>{{ errorMessage("email") }}</mat-error>
-    }
-  </mat-form-field>
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+          <div class="card">
+              <div class="card-header"></div>
+              <div class="card-body">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"  class="login-container">
 
-  <mat-form-field appearance="fill" class="form-control">
-    <mat-label>Password</mat-label>
-    <input
-      matInput
-      type="password"
-      placeholder="password"
-      [formControl]="password"
-      (blur)="updateErrorMessage()"
-      required
-    />
-    @if (password.invalid) {
-    <mat-error>{{ errorMessage("password") }}</mat-error>
-    }
-  </mat-form-field>
-  <button mat-flat-button color="primary" type="submit" class="form-control">Submit</button>
-</form>
+                  <div class="row mb-3">
+                    <label for="email" class="col-md-4 col-form-label text-md-end">Email</label>
+                    <div class="col-md-6">
+                      <mat-form-field >
+                        <mat-label>Email</mat-label>
+                          <input
+                            matInput
+                            placeholder="Obligatorio"
+                            [formControl]="email"
+                            required
+                          />
+                        @if (email.invalid) {
+                        <mat-error>{{ errorMessage("email") }}</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                      <div class="row mb-3">
+                          <label for="password" class="col-md-4 col-form-label text-md-end">Password</label>
+
+                          <div class="col-md-6">
+                            <mat-form-field appearance="fill">
+                              <mat-label>Password</mat-label>
+                              <input
+                                matInput
+                                type="password"
+                                placeholder="Obligatorio"
+                                [formControl]="password"
+                                required
+                              />
+                              @if (password.invalid) {
+                              <mat-error>{{ errorMessage("password") }}</mat-error>
+                              }
+                            </mat-form-field>
+
+                          </div>
+                      </div>
+
+                      <div class="row mb-3">
+                          <div class="col-md-6 offset-md-4">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" name="remember" id="remember" aria-label="remenber">
+
+                                  <label class="form-check-label" for="remember">
+
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="row mb-0">
+                          <div class="col-md-8 offset-md-4">
+                              <button type="submit" class="btn btn-primary">
+                                Login
+                              </button>
+
+                                  <a class="btn btn-link" href="">
+
+                                  </a>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
 
 

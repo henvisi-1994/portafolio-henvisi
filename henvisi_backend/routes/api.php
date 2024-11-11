@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SkillController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
@@ -31,15 +32,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::apiResources(
+    [
+        'qualification' => QualificationController::class,
+        'skill' => SkillController::class,
+        'service' => ServiceController::class,
+        'review' => ReviewController::class,
+        'category' => CategoryController::class,
+        'portfolio' => PortfolioController::class,
+        'aboutme' => AboutmeController::class,
+        'setting' => SettingController::class
+    ],
+    [
+        'parameters' => [
+
+        ],
+        'middleware' => ['auth:sanctum']
+    ]
+);
 Route::get('/', [AdminController::class, 'index'])->name('index');
 Route::get('/qualification/education', [QualificationController::class,'showEducation'])->name('qualification.edu');
 Route::get('/qualification/experience', [QualificationController::class,'showExperience'])->name('qualification.exp');
-Route::resource('/qualification', QualificationController::class);
-Route::resource('/skill', SkillController::class);
-Route::resource('/service', ServiceController::class);
-Route::resource('/review', ReviewController::class);
-Route::resource('/category', CategoryController::class);
 Route::get('/portfolio/search', [PortfolioController::class,'search'])->name('portfolio.search');
-Route::resource('/portfolio', PortfolioController::class);
-Route::resource('/aboutme', AboutmeController::class);
-Route::resource('/setting', SettingController::class);
+Route::post('/usuarios/login', [AuthController::class, 'login']);
