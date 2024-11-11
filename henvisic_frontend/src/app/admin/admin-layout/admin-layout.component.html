@@ -42,12 +42,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/admin/category">
-            <span class="menu-title">Category</span>
-            <i class="mdi mdi-home menu-icon"></i>
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="">
             <span class="menu-title">Aboutme</span>
             <i class="mdi mdi-contacts menu-icon"></i>
@@ -59,19 +53,26 @@
             <i class="mdi mdi-crosshairs-gps menu-icon"></i>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#ui-portfolio" aria-expanded="false" aria-controls="ui-basic">
-            <span class="menu-title">Portfolios</span>
-            <i class="menu-arrow"></i>
-            <i class="mdi mdi-contacts menu-icon"></i>
-          </a>
-          <div class="collapse" id="ui-portfolio">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="">Category</a></li>
-              <li class="nav-item"> <a class="nav-link" href="">Portfolio</a></li>
-            </ul>
-          </div>
-        </li>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <!-- Nodo para hojas sin hijos -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <button mat-icon-button disabled aria-label="menu"></button>
+            <a class="nav-link" [routerLink]="node.link">
+              <span class="menu-title">{{ node.name }}</span>
+            </a>
+          </mat-tree-node>
+
+          <!-- Nodo para elementos expandibles -->
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+              <mat-icon>
+                {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+              </mat-icon>
+            </button>
+            {{ node.name }}
+          </mat-tree-node>
+        </mat-tree>
+
         <li class="nav-item">
           <a class="nav-link" routerLink="/admin/service">
             <span class="menu-title">Services</span>
@@ -82,12 +83,6 @@
           <a class="nav-link" routerLink="/admin/skill">
             <span class="menu-title">Skills</span>
             <i class="mdi mdi-puzzle menu-icon"></i>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="">
-            <span class="menu-title">Reviews</span>
-            <i class="mdi mdi-thumbs-up-down menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
