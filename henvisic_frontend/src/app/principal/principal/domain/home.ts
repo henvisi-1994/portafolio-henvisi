@@ -4,10 +4,10 @@ import { Experience } from "./Experience";
 import { Setting } from "./Setting";
 import { UserHome } from "./UserHome";
 import { Service } from "../../../admin/service/domain/Service";
-import { Portafolio } from "./Portafolio";
 import { Review } from "./Review";
 import { Category } from "../../../admin/category/domain/Category";
 import { Skill } from "../../../admin/skill/domain/Skill";
+import { Portafolio } from "../../../admin/portafolio/domain/Portafolio";
 
 export class Home extends EntidadAuditable {
  user: UserHome | null;

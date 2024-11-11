@@ -559,7 +559,26 @@ export function convertirNumeroPositivo(entidad: any, campo: any) {
     }
   }
 }
+export const extraerBase64 = async (file: any): Promise<{ base: string | null }> =>
+  new Promise((resolve, reject) => {
+    try {
+      const reader = new FileReader();
+        reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve({
+          base: reader.result as string
+        });
+      };
 
+      reader.onerror = () => {
+        resolve({
+          base: null
+        });
+      };
+    } catch (error) {
+      reject(error);
+    }
+  });
 export async function notificarErrores(
   err: HttpErrorResponse,
   _snackBar: MatSnackBar

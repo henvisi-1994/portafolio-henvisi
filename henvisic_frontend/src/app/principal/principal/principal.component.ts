@@ -53,7 +53,6 @@ export class PrincipalComponent implements OnInit {
       .pipe(
         map(data => data.flat()[0] as Home),
         catchError(error => {
-          // Handle errors here, e.g., log error, display user message, etc.
           console.error('Error fetching data:', error);
           return of(null as unknown as Home); // Or return a default value
         })

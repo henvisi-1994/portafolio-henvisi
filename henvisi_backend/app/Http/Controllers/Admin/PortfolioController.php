@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PortfolioRequest;
+use App\Http\Resources\PortafolioResource;
 use App\Models\Category;
 use App\Models\Portfolio;
 use Exception;
@@ -10,9 +12,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Src\Shared\Utils;
 
 class PortfolioController extends Controller
 {
+    private $entidad = "Portafolio";
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +25,10 @@ class PortfolioController extends Controller
     public function index()
     {
         $portfolios = Portfolio::with('category')->get();
-        return view('admin.portfolio.index', compact('portfolios'));
+        $result = PortafolioResource::collection($portfolios);
+        return response()->json(compact('result'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -32,6 +38,7 @@ class PortfolioController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('admin.portfolio.create', compact('categories'));
     }
 
@@ -41,31 +48,13 @@ class PortfolioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PortfolioRequest $request)
     {
         try {
             DB::beginTransaction();
-            $validated = $request->validate([
-                'title' => 'required|min:4',
-                'project_url' => 'required',
-                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-                'cat_id' => 'required|exists:categories,id'
-            ]);
-
-            $portfolio = new Portfolio();
-            $portfolio->title = $validated['title'];
-            $portfolio->project_url = $validated['project_url'];
-            $portfolio->cat_id = $request->cat_id;
-
-            if ($request->hasFile('image')) {
-                // Almacena la imagen en el disco 'public' en la carpeta 'images/portafolios'
-                $get_file = $request->file('image')->store('images/portafolios', 'public');
-                $portfolio->image =  $get_file; // Agrega el prefijo 'storage/' para el acceso público
-            }
-
-            $portfolio->save();
+            $portfolio = Portfolio::create($request->validated());
             $modelo = $portfolio;
-            $mensaje = 'Guardado exitosamente';
+            $mensaje = Utils::obtenerMensaje($this->entidad, 'store');
             DB::commit();
             return response()->json(compact('mensaje', 'modelo'));
         } catch (Exception $e) {
@@ -96,26 +85,21 @@ class PortfolioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Portfolio $portfolio)
+    public function update(PortfolioRequest $request, Portfolio $portfolio)
     {
-        $validated = $request->validate([
-            'title' => 'required|min:4',
-            'project_url' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
-        ]);
-
-        $portfolio->title = $validated['title'];
-        $portfolio->project_url = $validated['project_url'];
-        $portfolio->cat_id = $request->cat_id;
-
-        if ($request->hasFile('image')) {
-            // Almacena la imagen en el disco 'public' en la carpeta 'images/portafolios'
-            $get_file = $request->file('image')->store('images/portafolios', 'public');
-            $portfolio->image =  $get_file; // Agrega el prefijo 'storage/' para el acceso público
+        try {
+            DB::beginTransaction();
+            $portfolio->update($request->validated());
+            DB::commit();
+            $modelo = $portfolio;
+            $mensaje = Utils::obtenerMensaje($this->entidad, 'update');
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al actualizar' => [$e->getMessage()],
+            ]);
         }
-
-        $portfolio->update();
-        return to_route('admin.portfolio.index')->with('message', 'Portfolio Updated');
     }
 
     /**

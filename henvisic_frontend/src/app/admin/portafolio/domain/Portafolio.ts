@@ -6,6 +6,7 @@ export class Portafolio extends EntidadAuditable {
   image: string | null;
   project_url: string | null;
   cat_id: number | null;
+  name_category: string | null;
   category: Category | null;
   constructor() {
     super();
@@ -13,6 +14,7 @@ export class Portafolio extends EntidadAuditable {
     this.image = null;
     this.project_url = null;
     this.cat_id = null;
+    this.name_category = null;
     this.category = null;
   }
 
