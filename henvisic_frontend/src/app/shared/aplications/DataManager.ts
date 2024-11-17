@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { DataRepository } from '../infraestructure/DataRepository.service';
 import Swal from 'sweetalert2';
+import { ParamsType } from '../interfaces/ParamsType';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,10 @@ export class DataManager<T> {
         return data.result;
       })
     );
+  }
+  getModelData<C>(endpoint: string, args?: ParamsType): Observable<C> {
+    this.dataRepository.endpoint = endpoint;
+    return this.dataRepository.objecto<C>(args);
   }
 
   guardar(endpoint: string, model: T): Observable<T> {

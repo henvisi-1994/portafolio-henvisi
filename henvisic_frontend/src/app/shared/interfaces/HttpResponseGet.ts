@@ -3,4 +3,5 @@ export interface HttpResponseGet<T> {
   data?: any;
   response: unknown; // Placeholder for the raw HTTP response object
   result: T[]; // Array to hold the list of results
+  model?: T |null; // Placeholder for
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserHome } from '../principal/domain/UserHome';
-import { Setting } from '../principal/domain/Setting';
+import { UserHome } from '../../admin/AboutMe/domain/UserHome';
+import { Setting } from '../../admin/Setting/domain/Setting';
 
 @Component({
   selector: 'app-user-info',

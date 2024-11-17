@@ -1,0 +1,118 @@
+<div class="container">
+  <form [formGroup]="Form">
+    <div class="form-fields">
+      <mat-form-field>
+        <mat-label>Titulo</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="about_title"
+          required
+        />
+        @if (about_title.invalid) {
+        <mat-error>{{ errorMessage("about_title") }}</mat-error>
+        }
+      </mat-form-field>
+      <app-image-upload
+        label="Foto"
+        placeholder="obligatorio"
+        [preview]="about_photo.value"
+        (imageChange)="obtenerImagen($event)"
+      />
+
+      <mat-form-field>
+        <mat-label>Facebook</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="fb_url"
+          required
+        />
+        @if (fb_url.invalid) {
+        <mat-error>{{ errorMessage("fb_url") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Github</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="github_url"
+          required
+        />
+        @if (github_url.invalid) {
+        <mat-error>{{ errorMessage("github_url") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Frelancer url</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="freelance_url"
+          required
+        />
+        @if (freelance_url.invalid) {
+        <mat-error>{{ errorMessage("freelance_url") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Linkedin</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="linkedin_url"
+          required
+        />
+        @if (linkedin_url.invalid) {
+        <mat-error>{{ errorMessage("linkedin_url") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>CV</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="cv_url"
+          required
+        />
+        @if (cv_url.invalid) {
+        <mat-error>{{ errorMessage("cv_url") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Video URL</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="video_url"
+          required
+        />
+        @if (video_url.invalid) {
+        <mat-error>{{ errorMessage("video_url") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Mail</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="contact_mail"
+          required
+        />
+        @if (contact_mail.invalid) {
+        <mat-error>{{ errorMessage("contact_mail") }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div>
+      <app-button-submit
+        [disabled]="disabled"
+        [accion]="accion"
+        (deshabilitar)="deshabilitar($event)"
+        [Form]="Form"
+        endpoint="setting"
+      ></app-button-submit>
+    </div>
+  </form>
+</div>

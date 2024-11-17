@@ -22,28 +22,27 @@ export class ButtonSubmitComponent<T extends EntidadAuditable> {
   @Input() tableData: T[][] = []; // Estado de la tabla
   @Input() endpoint: string = ''; // Estado del endpoint para guardar/actualizar los datos
   @Output() actualizarData: EventEmitter<T[][]> = new EventEmitter<T[][]>();
-  @Input() accion!: Model<T>;
+  @Input() accion: Model<T> | null = null;
   @Output() deshabilitar: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   cargando: boolean = false;
   constructor(private dataManager: DataManager<T>) {}
   onSubmit() {
-    if (this.Form.valid) {
-      this.cargando = true;
-      this.disabled = true;
-      if (this.accion === undefined) {
-        this.guardar();
-      } else if (this.accion.action === acciones.EDITAR) {
-        if (this.accion.model?.id) {
-          this.editar(this.accion.model.id);
-        }
-      }
-    } else {
-      console.log(this.Form)
-      console.log('Formulario no válido');
+    if (!this.Form.valid) {
+        console.log(this.Form);
+        console.log('Formulario no válido');
+        return;
     }
-  }
-  guardar() {
+
+    this.cargando = true;
+    this.disabled = true;
+
+    if (this.accion?.action === acciones.EDITAR && this.accion.model?.id) {
+        this.editar(this.accion.model.id);
+    } else {
+        this.guardar();
+    }
+}  guardar() {
     this.dataManager.guardar(this.endpoint, this.Form.value).subscribe(() => {
       this.listarData();
       this.disabled = false;

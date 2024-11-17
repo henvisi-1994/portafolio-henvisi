@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Setting } from '../../principal/domain/Setting';
+import { Setting } from '../../../admin/Setting/domain/Setting';
 
 @Component({
   selector: 'app-footer',

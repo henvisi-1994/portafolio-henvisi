@@ -579,6 +579,23 @@ export const extraerBase64 = async (file: any): Promise<{ base: string | null }>
       reject(error);
     }
   });
+  export function capturarImagen(event: any): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const imagenCapturada = event.target.files[0];
+      if (!imagenCapturada) {
+        reject("No se seleccionó ninguna imagen.");
+        return;
+      }
+
+      extraerBase64(imagenCapturada).then((result) => {
+        // Asegura que siempre se resuelva un string, incluso si result.base es null
+        resolve(result.base ?? "");
+      }).catch(() => {
+        reject("Error al procesar la imagen.");
+      });
+    });
+  }
+
 export async function notificarErrores(
   err: HttpErrorResponse,
   _snackBar: MatSnackBar

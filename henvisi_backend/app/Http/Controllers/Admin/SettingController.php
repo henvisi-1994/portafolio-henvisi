@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SettingRequest;
+use App\Http\Resources\SettingResource;
 use App\Models\Setting;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use Src\Shared\Utils;
 
 class SettingController extends Controller
 {
+    private $entidad = "Setting";
+
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +25,8 @@ class SettingController extends Controller
     public function index()
     {
         $setting = Setting::first();
-        // dd($setting);
-        return view('admin.setting.index', compact('setting'));
+        $model = new SettingResource($setting);
+        return  compact('model');
     }
 
     /**
@@ -28,31 +36,21 @@ class SettingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Setting $setting)
+    public function update(SettingRequest $request, Setting $setting)
     {
-        $validated = $request->validate([
-            'about_title' => 'required','min:3',
-            'about_description' => 'required','min:10',
-            'fb_url' => 'required|url',
-            'github_url' => 'required|url',
-            'linkedin_url' => 'required|url',
-            'freelance_url' => 'required|url',
-            'cv_url' => 'required|url',
-            'video_url' => 'required|url',
-            'contact_mail' => 'required|email',
-            'about_photo' => 'image|mimes:jpeg,png,jpg|max:2048'
-        ]);
-
-        // $setting = Setting::first();
-        if($request->hasfile('image')){
-            if($setting->about_photo != null){
-                Storage::delete($setting->about_photo);
-            }
-            $get_new_file = $request->file('image')->store('images');
-            $setting->about_photo = $get_new_file;
+        try {
+            DB::beginTransaction();
+            $validated = $request->validated();
+            $setting->update($validated);
+            $modelo = $setting;
+            $mensaje = Utils::obtenerMensaje($this->entidad, 'store');
+            DB::commit();
+            return response()->json(compact('mensaje', 'modelo'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
         }
-        $setting->update($validated);
-        return to_route('admin.setting.index')->with('message','Data Updated');
     }
-
 }

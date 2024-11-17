@@ -63,6 +63,19 @@ export class DataRepository<T> extends BaseHttpService {
         catchError((error: HttpErrorResponse) => throwError(() => new ApiError(error)))
       );
   }
+  objecto<C = T>(args?: ParamsType): Observable<C> {
+    const url = this.getEndpointUrl({ args });
+
+    return this.http.get<HttpResponseGet<C>>(url).pipe(
+      map((response: HttpResponseGet<C>) => {
+        if (response.model == null) {
+          throw new Error("No se encontró el objeto solicitado");
+        }
+        return response.model;
+      }),
+      catchError((error: HttpErrorResponse) => throwError(() => new ApiError(error)))
+    );
+  }
   guardar(entidad: T, params?: ParamsType): Observable<ResponseItem<T, HttpResponsePost<T>>> {
     const url = this.getEndpointUrl({args:params}); // Function to construct the URL with optional parameters
 

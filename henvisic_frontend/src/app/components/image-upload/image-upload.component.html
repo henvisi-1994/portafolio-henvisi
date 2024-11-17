@@ -1,0 +1,17 @@
+<div class="custom-field-wrapper">
+  <!-- Botón personalizado que activa el input file -->
+  <label class="custom-file-btn" for="file-input">Seleccionar archivo</label>
+
+  <!-- Input file oculto -->
+  <input
+    id="file-input"
+    class="custom-input"
+    type="file"
+    (change)="onFileChange($event)"
+    [placeholder]="placeholder"
+  />
+
+  <div *ngIf="preview">
+    <img [src]="preview" alt="Preview" width="150" />
+  </div>
+</div>

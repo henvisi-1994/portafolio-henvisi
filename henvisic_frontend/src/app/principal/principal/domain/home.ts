@@ -1,8 +1,8 @@
 import { EntidadAuditable } from "../../../shared/domain/EntidadAuditable";
 import { Education } from "./Education";
 import { Experience } from "./Experience";
-import { Setting } from "./Setting";
-import { UserHome } from "./UserHome";
+import { Setting } from "../../../admin/Setting/domain/Setting";
+import { UserHome } from "../../../admin/AboutMe/domain/UserHome";
 import { Service } from "../../../admin/service/domain/Service";
 import { Review } from "./Review";
 import { Category } from "../../../admin/category/domain/Category";

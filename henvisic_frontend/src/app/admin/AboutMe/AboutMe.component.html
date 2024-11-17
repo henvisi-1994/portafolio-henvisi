@@ -1,0 +1,120 @@
+<div class="container">
+  <form [formGroup]="Form">
+    <div class="form-fields">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="name"
+          required
+        />
+        @if (name.invalid) {
+        <mat-error>{{ errorMessage("name") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="email"
+          required
+        />
+        @if (email.invalid) {
+        <mat-error>{{ errorMessage("email") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Telefono</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="phone"
+          required
+        />
+        @if (phone.invalid) {
+        <mat-error>{{ errorMessage("phone") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Direccion</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="address"
+          required
+        />
+        @if (address.invalid) {
+        <mat-error>{{ errorMessage("address") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Trabajo</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="job"
+          required
+        />
+        @if (job.invalid) {
+        <mat-error>{{ errorMessage("job") }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field >
+        <mat-label>Degree</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="degree"
+          required
+        />
+        @if (degree.invalid) {
+        <mat-error>{{ errorMessage("degree") }}</mat-error>
+        }
+      </mat-form-field>
+      <app-image-upload
+      label="Imagen de Perfil"
+      placeholder="obligatorio"
+      [preview]="profilePic.value"
+      (imageChange)="obtenerImagen($event)"
+      />
+      <mat-form-field >
+        <mat-label>Cumpleaños</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [formControl]="birth_day"
+          placeholder="Obligatorio"
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Experiencia</mat-label>
+        <input
+          matInput
+          placeholder="Obligatorio"
+          [formControl]="experience"
+          required
+        />
+        @if (experience.invalid) {
+        <mat-error>{{ errorMessage("experience") }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div>
+      <app-button-submit
+        [disabled]="disabled"
+        [accion]="accion"
+        (deshabilitar)="deshabilitar($event)"
+        [Form]="Form"
+        endpoint="aboutme"
+      ></app-button-submit>
+    </div>
+  </form>
+</div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,7 +17,7 @@ import { PortafolioColumns } from './domain/PortafolioColumns';
 import { Category } from '../category/domain/Category';
 import { catchError, map, of } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
-import { extraerBase64 } from '../../shared/utils';
+import { capturarImagen } from '../../shared/utils';
 
 @Component({
   selector: 'app-portafolio',
@@ -50,6 +50,7 @@ export class PortafolioComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private categoryManager: DataManager<Category>,
     private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
     private formValidationService: FormValidationService) {
     this.Form = this.fb.group({
       title: [{ value: '', disabled: false }, [Validators.required]],
@@ -62,10 +63,10 @@ export class PortafolioComponent implements OnInit {
   tableData: Portafolio[][] = [[]];
   categories: Category[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  archivos:any = []
+  archivos: any = []
   cargando: boolean = true;
   disabled: boolean = false;
-  previsualizacion:string| null = null;
+  previsualizacion: string | null = null;
   get title(): FormControl {
     return this.Form.get('title') as FormControl;
   }
@@ -91,16 +92,16 @@ export class PortafolioComponent implements OnInit {
   }
   listarCategory() {
     this.categoryManager.loadData('category')
-    .pipe(
-      map(data => data.flat() as Category[]), // Asegúrate de que `data` es un arreglo de arreglos o ajusta `flat` si no es necesario
-      catchError(error => {
-        console.error('Error fetching data:', error);
-        return of([]); // Devuelve un arreglo vacío en caso de error
-      })
-    )
-    .subscribe(homeModel => {
-      this.categories = homeModel;
-    });
+      .pipe(
+        map(data => data.flat() as Category[]), // Asegúrate de que `data` es un arreglo de arreglos o ajusta `flat` si no es necesario
+        catchError(error => {
+          console.error('Error fetching data:', error);
+          return of([]); // Devuelve un arreglo vacío en caso de error
+        })
+      )
+      .subscribe(homeModel => {
+        this.categories = homeModel;
+      });
 
   }
   errorMessage(controlName: string): string {
@@ -122,15 +123,14 @@ export class PortafolioComponent implements OnInit {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  capturarImagen(event:any){
-    const imagenCapturada = event.target.files[0]
-    //this.archivos.push(imagenCapturada)
-    extraerBase64(imagenCapturada).then((result) => {
-      this.previsualizacion = result.base
+  obtenerImagen(event: any) {
+   capturarImagen(event).then((base64String) => {
+      this.previsualizacion = base64String
       this.image.setValue(this.previsualizacion)
+      this.cdr.detectChanges();
+    }).catch((error) => {
+      console.error(error);
     });
-
   }
-
 
 }

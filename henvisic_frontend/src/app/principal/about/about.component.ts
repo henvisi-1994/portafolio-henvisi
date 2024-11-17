@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Model } from '../../shared/interfaces/Model';
-import { EntidadAuditable } from '../../shared/domain/EntidadAuditable';
-import { Setting } from '../principal/domain/Setting';
-import { UserHome } from '../principal/domain/UserHome';
+import { Setting } from '../../admin/Setting/domain/Setting';
+import { UserHome } from '../../admin/AboutMe/domain/UserHome';
 
 @Component({
   selector: 'app-about',
